@@ -72,6 +72,9 @@
         });
         scene.add(gltf.scene);
         teapot.position.z = -40.0;
+
+        teapot.rotation.x = 0.2;
+        teapot.rotation.y = 0.5;
     },
     function ( xhr ) {console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );},
         function ( error ) {console.log( 'An error happened' );}// called when loading has errors
@@ -90,10 +93,13 @@
         }
         });
         scene.add(gltf.scene);
-        rightCup.scale.set(20, 20, 20);
-        rightCup.position.z = -40;
-        rightCup.position.y = 5;
-        rightCup.position.x = 7;
+        rightCup.scale.set(9, 9, 9);
+        rightCup.position.z = -25;
+        rightCup.position.y = -0.70;
+        rightCup.position.x = 5.25;
+
+        rightCup.rotation.x = 0.2;
+        rightCup.rotation.y = 0.5;
     },
     function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); },
         function ( error ) {console.log( 'An error happened' );} // called when loading has errors
@@ -111,10 +117,13 @@
         }
         });
         scene.add(gltf.scene);
-        leftCup.scale.set(20, 20, 20);
-        leftCup.position.z = -40;
-        leftCup.position.y = 5;
-        leftCup.position.x = -10;
+        leftCup.scale.set(10, 10, 10);
+        leftCup.position.z = -35;
+        leftCup.position.y = -0.75;
+        leftCup.position.x = -5;
+
+        leftCup.rotation.x = 0.2;
+        leftCup.rotation.y = 0.5;
     },
     function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); },
         function ( error ) {console.log( 'An error happened' );} // called when loading has errors
@@ -144,6 +153,57 @@
         function ( error ) {console.log( 'An error happened' );} // called when loading has errors
     );
 
+
+    var leftPlate;
+    loader.load('plate.glb',
+    function(gltf){
+        leftPlate = gltf.scene;
+
+        gltf.scene.traverse(function(node){
+        if(node.isMesh){
+            node.castShadow = true;
+            node.receiveShadow = true;
+        }
+        });
+        scene.add(gltf.scene);
+        leftPlate.scale.set(0.5, 0.5, 0.5);
+        leftPlate.position.z = -30;
+        leftPlate.position.y = -1;
+        leftPlate.position.x = -2;
+
+        leftPlate.rotation.x = 0.2;
+        leftPlate.rotation.y = 0.8;
+    },
+    function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); },
+        function ( error ) {console.log( 'An error happened' );} // called when loading has errors
+    );
+
+
+    var rightPlate;
+    loader.load('plate.glb',
+    function(gltf){
+        rightPlate = gltf.scene;
+
+        gltf.scene.traverse(function(node){
+        if(node.isMesh){
+            node.castShadow = true;
+            node.receiveShadow = true;
+        }
+        });
+        scene.add(gltf.scene);
+        rightPlate.scale.set(0.5, 0.5, 0.5);
+        rightPlate.position.z = -25;
+        rightPlate.position.y = -1;
+        rightPlate.position.x = 3.5;
+
+        rightPlate.rotation.x = 0.2;
+        rightPlate.rotation.y = 0.8;
+
+
+    },
+    function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); },
+        function ( error ) {console.log( 'An error happened' );} // called when loading has errors
+    );
 
     //RENDER LOOP
     render();
