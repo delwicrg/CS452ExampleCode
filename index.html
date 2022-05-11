@@ -92,8 +92,8 @@
         scene.add(gltf.scene);
         rightCup.scale.set(20, 20, 20);
         rightCup.position.z = -40;
-        rightCup.position.y = -5;
-        rightCup.position.x = 10;
+        rightCup.position.y = 5;
+        rightCup.position.x = 7;
     },
     function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); },
         function ( error ) {console.log( 'An error happened' );} // called when loading has errors
@@ -113,13 +113,36 @@
         scene.add(gltf.scene);
         leftCup.scale.set(20, 20, 20);
         leftCup.position.z = -40;
-        leftCup.position.y = -5;
+        leftCup.position.y = 5;
         leftCup.position.x = -10;
     },
     function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); },
         function ( error ) {console.log( 'An error happened' );} // called when loading has errors
     );
 
+
+    var table;
+    loader.load('table.glb',
+    function(gltf){
+        table = gltf.scene;
+
+        gltf.scene.traverse(function(node){
+        if(node.isMesh){
+            node.castShadow = true;
+            node.receiveShadow = true;
+        }
+        });
+        scene.add(gltf.scene);
+        table.scale.set(2.35, 2.35, 2.35);
+        table.position.z = -40;
+        //table.position.y = -5;
+        //table.position.x = -10;
+        table.rotation.x = 0.2;
+        table.rotation.y = 0.5;
+    },
+    function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); },
+        function ( error ) {console.log( 'An error happened' );} // called when loading has errors
+    );
 
 
     //RENDER LOOP
