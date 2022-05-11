@@ -32,9 +32,12 @@
 
     //CAMERA
     camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    
 
     //SCENE
     scene = new THREE.Scene();
+
+    camera.lookAt(scene.position); 
 
     //LIGHTS
     var light = new THREE.AmbientLight(0xffffff, 0.5);
@@ -42,39 +45,81 @@
 
     var light2 = new THREE.PointLight(0xffffff, 0.5);
     scene.add(light2);
-  
 
-    // FOR TEAPOT ****************
-    var loader = new THREE.GLTFLoader();
-    loader.load('teapot.glb', handle_load);
-    var mesh;
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light3 = new THREE.DirectionalLight(color, intensity);
+    light3.position.set(0, 10, 0);
+    light3.target.position.set(-5, 0, 0);
+    scene.add(light3);
+    scene.add(light3.target);
 
-    function handle_load(gltf) {
-        console.log(gltf);
-        mesh = gltf.scene;
-        console.log(mesh.children[0]);
-        mesh.children[0].material = new THREE.MeshLambertMaterial();
-		scene.add( mesh );
-        mesh.position.z = -40;
+    //const controls = new OrbitControls(camera, renderer.domElement); //do we want to set this up?
 
-    }
-    // *************
+    const loader = new THREE.GLTFLoader();
 
-    // FOR CUP ***************
-    var loader = new THREE.GLTFLoader();
-    loader.load('coffee.glb', handle_load);
 
-    var mesh;
+    var teapot;
+    loader.load('teapot.glb',
+    function(gltf){
+        teapot = gltf.scene;
 
-    function handle_load(gltf) {
-        console.log(gltf);
-        mesh = gltf.scene;
-        console.log(mesh.children[0]);
-        mesh.children[0].material = new THREE.MeshLambertMaterial();
-		scene.add( mesh );
-        mesh.position.z = -40;
-    }
-    // ***************
+        gltf.scene.traverse(function(node){
+        if(node.isMesh){
+            node.castShadow = true;
+            node.receiveShadow = true;
+        }
+        });
+        scene.add(gltf.scene);
+        teapot.position.z = -40.0;
+    },
+    function ( xhr ) {console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );},
+        function ( error ) {console.log( 'An error happened' );}// called when loading has errors
+    );
+
+
+    var rightCup;
+    loader.load('cup.glb',
+    function(gltf){
+        rightCup = gltf.scene;
+
+        gltf.scene.traverse(function(node){
+        if(node.isMesh){
+            node.castShadow = true;
+            node.receiveShadow = true;
+        }
+        });
+        scene.add(gltf.scene);
+        rightCup.scale.set(20, 20, 20);
+        rightCup.position.z = -40;
+        rightCup.position.y = -5;
+        rightCup.position.x = 10;
+    },
+    function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); },
+        function ( error ) {console.log( 'An error happened' );} // called when loading has errors
+    );
+
+    var leftCup;
+    loader.load('cup.glb',
+    function(gltf){
+        leftCup = gltf.scene;
+
+        gltf.scene.traverse(function(node){
+        if(node.isMesh){
+            node.castShadow = true;
+            node.receiveShadow = true;
+        }
+        });
+        scene.add(gltf.scene);
+        leftCup.scale.set(20, 20, 20);
+        leftCup.position.z = -40;
+        leftCup.position.y = -5;
+        leftCup.position.x = -10;
+    },
+    function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); },
+        function ( error ) {console.log( 'An error happened' );} // called when loading has errors
+    );
+
 
 
     //RENDER LOOP
@@ -86,8 +131,14 @@
     function render() {
         delta += 0.1;
 
-        if (mesh) {  
-            mesh.rotation.y += 0.01;
+        if (teapot) {  
+            teapot.rotation.y += 0.01;
+        }
+        if (rightCup) {  
+            rightCup.rotation.y += 0.01;
+        }
+        if (leftCup) {  
+            leftCup.rotation.y += 0.01;
         }
 
     	renderer.render(scene, camera);
