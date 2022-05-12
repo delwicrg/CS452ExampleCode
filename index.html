@@ -1,72 +1,70 @@
 <html>
 <head>
     <title>Cheese Time!</title>
-
     <style>
-    	body{
+        body{
     		margin: 0;
     		overflow: hidden;
     	}
     </style>
 </head>
 <body onkeydown="moveKeys(event)">
-    <canvas id="myCanvas"></canvas>
+    <canvas id="gl_canvas"></canvas>
     <script src="three.js"></script>
     <script src="GLTFLoader.js"></script>
 
     <script>
 
-        var renderer,scene,camera,myCanvas = document.getElementById('myCanvas');
+        var renderer,scene,camera, gl_canvas = document.getElementById('gl_canvas');
 
-        //RENDERER
-        renderer = new THREE.WebGLRenderer({
-        canvas: myCanvas, 
-        antialias: true
-        });
+        renderer = new THREE.WebGLRenderer({ canvas: gl_canvas, antialias: true });
 
         renderer.setClearColor(0xFFEE9A);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
-        //CAMERA
         camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 1000 );
         
 
-        //SCENE
         scene = new THREE.Scene();
         camera.lookAt(scene.position); 
 
-        //LIGHTS
+        // ambient light
         var light = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(light);
 
+        // point light source
         var light2 = new THREE.PointLight(0xffffff, 0.5);
         scene.add(light2);
 
-    var rotateTeapot = 0;
-    var rotateRight = 0;
-    var rotateLeft = 0;
+        // flags for teapot, left cup and rightcup
+        // all are off to begin with 
+        // x and y translation can not happen simutaneously but scale and rotate can happen at the same time as translation
+        var rotateTeapot = 0;
+        var rotateRight = 0;
+        var rotateLeft = 0;
 
-    var PosMoveTeapotX = 0;
-    var PosMoveRightX = 0;
-    var PosMoveLeftX = 0; 
+        var PosMoveTeapotX = 0;
+        var PosMoveRightX = 0;
+        var PosMoveLeftX = 0; 
 
-    var NegMoveTeapotX = 0;
-    var NegMoveRightX = 0;
-    var NegMoveLeftX = 0; 
+        var NegMoveTeapotX = 0;
+        var NegMoveRightX = 0;
+        var NegMoveLeftX = 0; 
 
-    var PosMoveTeapotY = 0;
-    var PosMoveRightY = 0;
-    var PosMoveLeftY = 0; 
+        var PosMoveTeapotY = 0;
+        var PosMoveRightY = 0;
+        var PosMoveLeftY = 0; 
 
-    var NegMoveTeapotY = 0;
-    var NegMoveRightY = 0;
-    var NegMoveLeftY = 0; 
+        var NegMoveTeapotY = 0;
+        var NegMoveRightY = 0;
+        var NegMoveLeftY = 0; 
 
-    var ScaleTeapot = 0;
-    var ScaleLeft = 0;
-    var ScaleRight = 0; 
+        var ScaleTeapot = 0;
+        var ScaleLeft = 0;
+        var ScaleRight = 0; 
 
+        // directional light
         const color = 0xCFE2F3;
         const intensity = 1;
         const light3 = new THREE.DirectionalLight(color, intensity);
@@ -285,8 +283,6 @@
             fireplace.rotation.y = -0.9;
         });
 
-
-
         //RENDER LOOP
         render();
 
@@ -296,80 +292,70 @@
         function render() {
             delta += 0.1;
 
-            delta += 0.1;
+            // TEAPOT
+            if (teapot) {  
+                if(rotateTeapot == 1){teapot.rotation.z += 0.006;}
+                if(PosMoveTeapotX == 1){ teapot.position.x += .01;}
+                if(NegMoveTeapotX == 1){ teapot.position.x -= .01;}
+                if(PosMoveTeapotY == 1){ teapot.position.y += .01;}
+                if(NegMoveTeapotY == 1){ teapot.position.y -= .01;}
+                if(ScaleTeapot == 1){ teapot.scale.x += .001; teapot.scale.y += .001; teapot.scale.z += .001; }
+            }
 
-if (teapot) {  
-    if(rotateTeapot == 1){teapot.rotation.z += 0.006;}
-    if(PosMoveTeapotX == 1){ teapot.position.x += .01;}
-    if(NegMoveTeapotX == 1){ teapot.position.x -= .01;}
-    if(PosMoveTeapotY == 1){ teapot.position.y += .01;}
-    if(NegMoveTeapotY == 1){ teapot.position.y -= .01;}
-    if(ScaleTeapot == 1){ teapot.scale.x += .001; teapot.scale.y += .001; teapot.scale.z += .001; }
+            // RIGHT CUP
+            if (rightCup ) {  
+                if(rotateRight == 1){rightCup.rotation.y += 0.01;}
+                if(PosMoveRightX == 1){rightCup.position.x += .01;}
+                if(NegMoveRightX == 1){rightCup.position.x -= .01;}
+                if(PosMoveRightY == 1){rightCup.position.y += .01;}
+                if(NegMoveRightY == 1){rightCup.position.y -= .01;}
+                if(ScaleRight == 1){ rightCup.scale.x += .01; rightCup.scale.y += .01; rightCup.scale.z += .01;}
+            }
 
-    
-
-}
-if (rightCup ) {  
-    if(rotateRight == 1){rightCup.rotation.y += 0.01;}
-    if(PosMoveRightX == 1){rightCup.position.x += .01;}
-    if(NegMoveRightX == 1){rightCup.position.x -= .01;}
-    if(PosMoveRightY == 1){rightCup.position.y += .01;}
-    if(NegMoveRightY == 1){rightCup.position.y -= .01;}
-    if(ScaleRight == 1){ rightCup.scale.x += .01; rightCup.scale.y += .01; rightCup.scale.z += .01;}
-
-
-}
-if (leftCup ) {  
-    if(rotateLeft == 1){leftCup.rotation.y += 0.01;}
-    if(PosMoveLeftX == 1){leftCup.position.x += .01;}
-    if(NegMoveLeftX == 1){leftCup.position.x -= .01;}
-    if(PosMoveLeftY == 1){leftCup.position.y += .01;}
-    if(NegMoveLeftY == 1){leftCup.position.y -= .01;}
-    if(ScaleLeft == 1){ leftCup.scale.x += .01;  leftCup.scale.y += .01;  leftCup.scale.z += .01;}
-
-
-}
+            // LEFT CUP
+            if (leftCup ) {  
+                if(rotateLeft == 1){leftCup.rotation.y += 0.01;}
+                if(PosMoveLeftX == 1){leftCup.position.x += .01;}
+                if(NegMoveLeftX == 1){leftCup.position.x -= .01;}
+                if(PosMoveLeftY == 1){leftCup.position.y += .01;}
+                if(NegMoveLeftY == 1){leftCup.position.y -= .01;}
+                if(ScaleLeft == 1){ leftCup.scale.x += .01;  leftCup.scale.y += .01;  leftCup.scale.z += .01;}
+            }
 
             renderer.render(scene, camera);
-
             requestAnimationFrame(render);
         }
+
         function moveKeys(event){
-        var theKeyCode = event.keyCode;
+            var theKeyCode = event.keyCode;
 
-        // a s d w e q
-        // LEFT CUP
-        if(theKeyCode == 69){ if(rotateLeft == 0){rotateLeft= 1;} else{rotateLeft = 0;}} // e 
-        else if(theKeyCode == 68){if(PosMoveLeftX == 0){PosMoveLeftX = 1; NegMoveLeftX = 0; PosMoveLeftY = 0; NegMoveLeftY = 0;} else{PosMoveLeftX = 0;};} // d
-        else if(theKeyCode == 65){if(NegMoveLeftX == 0){NegMoveLeftX = 1; PosMoveLeftX = 0; PosMoveLeftY = 0; NegMoveLeftY = 0;} else{NegMoveLeftX = 0;};} // f
-        else if(theKeyCode == 87){if(PosMoveLeftY == 0){PosMoveLeftY = 1; NegMoveLeftY = 0; PosMoveLeftX = 0; NegMoveLeftX = 0;} else{PosMoveLeftY = 0;};} // w
-        else if(theKeyCode == 83){if(NegMoveLeftY == 0){NegMoveLeftY = 1; PosMoveLeftY = 0; PosMoveLeftX = 0; NegMoveLeftX = 0;} else{NegMoveLeftY = 0;};} // s
-        else if(theKeyCode == 81){ if(ScaleLeft == 0){ScaleLeft= 1;} else{ScaleLeft = 0;}} // q
+            // a s d w e q
+            // LEFT CUP
+            if(theKeyCode == 69){ if(rotateLeft == 0){rotateLeft= 1;} else{rotateLeft = 0;}} // e 
+            else if(theKeyCode == 68){if(PosMoveLeftX == 0){PosMoveLeftX = 1; NegMoveLeftX = 0; PosMoveLeftY = 0; NegMoveLeftY = 0;} else{PosMoveLeftX = 0;};} // d
+            else if(theKeyCode == 65){if(NegMoveLeftX == 0){NegMoveLeftX = 1; PosMoveLeftX = 0; PosMoveLeftY = 0; NegMoveLeftY = 0;} else{NegMoveLeftX = 0;};} // f
+            else if(theKeyCode == 87){if(PosMoveLeftY == 0){PosMoveLeftY = 1; NegMoveLeftY = 0; PosMoveLeftX = 0; NegMoveLeftX = 0;} else{PosMoveLeftY = 0;};} // w
+            else if(theKeyCode == 83){if(NegMoveLeftY == 0){NegMoveLeftY = 1; PosMoveLeftY = 0; PosMoveLeftX = 0; NegMoveLeftX = 0;} else{NegMoveLeftY = 0;};} // s
+            else if(theKeyCode == 81){ if(ScaleLeft == 0){ScaleLeft= 1;} else{ScaleLeft = 0;}} // q
 
+            // f g h t y r
+            // TEAPOT
+            else if(theKeyCode == 89){if(rotateTeapot == 0){rotateTeapot = 1; } else{rotateTeapot = 0;} } // y
+            else if(theKeyCode == 72){if(PosMoveTeapotX == 0){PosMoveTeapotX = 1; NegMoveTeapotX = 0; NegMoveTeapotY = 0; PosMoveTeapotY = 0;} else{PosMoveTeapotX = 0;};} // h
+            else if(theKeyCode == 70){if(NegMoveTeapotX == 0){NegMoveTeapotX = 1; PosMoveTeapotX = 0; NegMoveTeapotY = 0; PosMoveTeapotY = 0;} else{NegMoveTeapotX = 0;};} // f
+            else if(theKeyCode == 84){if(PosMoveTeapotY == 0){PosMoveTeapotY = 1; NegMoveTeapotY = 0; NegMoveTeapotX = 0; PosMoveTeapotX = 0;} else{PosMoveTeapotY = 0;};} // t
+            else if(theKeyCode == 71){if(NegMoveTeapotY == 0){NegMoveTeapotY = 1; PosMoveTeapotY = 0; NegMoveTeapotX = 0; PosMoveTeapotX = 0;} else{NegMoveTeapotY = 0;};} // g
+            else if(theKeyCode == 82){ if(ScaleTeapot == 0){ScaleTeapot= 1;} else{ScaleTeapot = 0;}} // q
 
-       
-        // f g h t y r
-        // TEAPOT
-        else if(theKeyCode == 89){if(rotateTeapot == 0){rotateTeapot = 1; } else{rotateTeapot = 0;} } // y
-        else if(theKeyCode == 72){if(PosMoveTeapotX == 0){PosMoveTeapotX = 1; NegMoveTeapotX = 0; NegMoveTeapotY = 0; PosMoveTeapotY = 0;} else{PosMoveTeapotX = 0;};} // h
-        else if(theKeyCode == 70){if(NegMoveTeapotX == 0){NegMoveTeapotX = 1; PosMoveTeapotX = 0; NegMoveTeapotY = 0; PosMoveTeapotY = 0;} else{NegMoveTeapotX = 0;};} // f
-        else if(theKeyCode == 84){if(PosMoveTeapotY == 0){PosMoveTeapotY = 1; NegMoveTeapotY = 0; NegMoveTeapotX = 0; PosMoveTeapotX = 0;} else{PosMoveTeapotY = 0;};} // t
-        else if(theKeyCode == 71){if(NegMoveTeapotY == 0){NegMoveTeapotY = 1; PosMoveTeapotY = 0; NegMoveTeapotX = 0; PosMoveTeapotX = 0;} else{NegMoveTeapotY = 0;};} // g
-        else if(theKeyCode == 82){ if(ScaleTeapot == 0){ScaleTeapot= 1;} else{ScaleTeapot = 0;}} // q
-
-
-
-        // j k l i o u
-        // RIGHT CUP
-        else if(theKeyCode == 79){if(rotateRight == 0){rotateRight = 1;} else{rotateRight = 0;};} // o  
-        else if(theKeyCode == 76){if(PosMoveRightX == 0){PosMoveRightX = 1; NegMoveRightX = 0; NegMoveRightY = 0; NegMoveRightY = 0;} else{PosMoveRightX = 0;};} // l 
-        else if(theKeyCode == 74){if(NegMoveRightX == 0){NegMoveRightX = 1; PosMoveRightX = 0; NegMoveRightY = 0; NegMoveRightY = 0;} else{NegMoveRightX = 0;};} // j
-        else if(theKeyCode == 73){if(PosMoveRightY == 0){PosMoveRightY = 1; NegMoveRightY = 0; NegMoveRightX = 0; NegMoveRightX = 0;} else{PosMoveRightY = 0;};} // i
-        else if(theKeyCode == 75){if(NegMoveRightY == 0){NegMoveRightY = 1; PosMoveRightY = 0; NegMoveRightX = 0; NegMoveRightX = 0;} else{NegMoveRightY = 0;};} // k
-        else if(theKeyCode == 85){ if(ScaleRight == 0){ScaleRight= 1;} else{ScaleRight = 0;}} // q
-
+            // j k l i o u
+            // RIGHT CUP
+            else if(theKeyCode == 79){if(rotateRight == 0){rotateRight = 1;} else{rotateRight = 0;};} // o  
+            else if(theKeyCode == 76){if(PosMoveRightX == 0){PosMoveRightX = 1; NegMoveRightX = 0; NegMoveRightY = 0; NegMoveRightY = 0;} else{PosMoveRightX = 0;};} // l 
+            else if(theKeyCode == 74){if(NegMoveRightX == 0){NegMoveRightX = 1; PosMoveRightX = 0; NegMoveRightY = 0; NegMoveRightY = 0;} else{NegMoveRightX = 0;};} // j
+            else if(theKeyCode == 73){if(PosMoveRightY == 0){PosMoveRightY = 1; NegMoveRightY = 0; NegMoveRightX = 0; NegMoveRightX = 0;} else{PosMoveRightY = 0;};} // i
+            else if(theKeyCode == 75){if(NegMoveRightY == 0){NegMoveRightY = 1; PosMoveRightY = 0; NegMoveRightX = 0; NegMoveRightX = 0;} else{NegMoveRightY = 0;};} // k
+            else if(theKeyCode == 85){ if(ScaleRight == 0){ScaleRight= 1;} else{ScaleRight = 0;}} // q
     }
-
 
     </script>
 </body>
